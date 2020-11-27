@@ -1,0 +1,11 @@
+---
+- name: set alias
+  hosts: all
+  tasks:
+     - name: Set aliases
+       lineinfile:
+             path: ~/.bashrc
+             line: alias shortName='commandName'  
+             line: alias shortName='commandName'
+             state: present
+             backup: yes
