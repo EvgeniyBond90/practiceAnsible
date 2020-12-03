@@ -1,0 +1,17 @@
+---
+- name: =========myPlayBook============
+  hosts: all
+  become: yes
+
+  tasks:
+
+  - block: #=========Block for Debian===========
+      - name: Download packages from internet
+        get_url: url=https://repo.zabbix.com/zabbix/3.0/debian/pool/main/z/zabbix-release/zabbix-release_3.0-2+buster_all.deb dest=/root
+
+      - name: install repository zabbix
+        dpkg_selections: name=zabbix-release_3.0-2+buster_all.deb selection=install
+
+      - name: install zabbix agent
+        apt: name=zabbix-agent state=latest
+    when: ansible_os_family == "Debian"
