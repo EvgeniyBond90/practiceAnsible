@@ -1,3 +1,4 @@
+
 ---
 - name: =========myPlayBook============
   hosts: all
@@ -5,13 +6,30 @@
 
   tasks:
 
-  - block: #=========Block for Debian=========== 
+   - block: #=========Block for Debian===========
       - name: Download packages from internet
-        get_url: url=https://repo.zabbix.com/zabbix/3.0/debian/pool/main/z/zabbix-release/zabbix-release_3.0-2+buster_all.deb dest=/root
+        get_url: url=https://repo.zabbix.com/zabbix/4.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_4.0-2+bionic_all.deb dest=/root
 
       - name: install repository zabbix
-        dpkg_selections: name=zabbix-release_3.0-2+buster_all.deb selection=install
+        dpkg_selections: name=zabbix-release_4.0-2+bionic_all.deb selection=install
+
+      - name: update repository Debian
+        apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
 
       - name: install zabbix agent
         apt: name=zabbix-agent state=latest
-    when: ansible_os_family == "Debian"
+
+     when: ansible_os_family == "Debian"
+
+
+   - block: #=========Block for RedHat===========
+      - name: Download packages from internet
+        yum: name=https://repo.zabbix.com/zabbix/4.0/rhel/7/x86_64/zabbix-release-4.0-1.el7.noarch.rpm
+
+      - name: install zabbix agent
+        yum: name=zabbix-agent state=latest
+
+      - name: service zabbix-agent start
+        service: name=zabbix-agent state=started
+
+     when: ansible_os_family == "RedHat"
