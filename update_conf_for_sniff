@@ -1,0 +1,30 @@
+---
+
+- name: update sniffers
+  hosts: sniffers
+  become: yes
+
+  vars:
+    source_file: /etc/ansible/forSniffer/
+    source_file2: /etc/ansible/rc.local
+    destin_file: /home/pi/sniff
+    destin_file2: /etc/
+
+  tasks:
+  - name: delete file monitor
+    shell: sudo rm /home/pi/sniff/monitor
+
+  - name: delete file sniff
+    shell: sudo rm /home/pi/sniff/sniff
+
+  - name: Copy files to /home/pi/sniff
+    copy: src={{ source_file }} dest={{ destin_file }} mode=0751
+
+  - name: copy and update rc.local
+    copy: src={{ source_file2 }} dest={{ destin_file2 }} mode=0751
+
+  - name: change tymesyncd.conf
+    lineinfile: path=/etc/systemd/timesyncd.conf line='NTP=10.188.8.104'
+
+  - name: Reboot host
+    shell: name=sudo reboot
