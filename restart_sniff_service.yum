@@ -1,0 +1,12 @@
+---
+- name: restart sniff service
+  hosts: ostanovki_sniffers
+  become: yes
+
+
+
+  tasks:
+
+    - name: restart service sniff on host
+      shell: sudo systemctl restart sniff   
+

@@ -1,0 +1,32 @@
+---
+
+- name: configure zabbix_agent
+  hosts: kismp_sniffers
+  become: yes
+
+  tasks:
+  - name: change Server
+    lineinfile: dest=/etc/zabbix/zabbix_agentd.conf
+                regexp='^Server='
+                line='Server=10.188.8.112'
+    
+  - name: change ServerActive
+    lineinfile: dest=/etc/zabbix/zabbix_agentd.conf
+                regexp='^ServerActive='
+                line='ServerActive=10.188.8.112' 
+
+  - name: change Hostname
+    lineinfile: dest=/etc/zabbix/zabbix_agentd.conf
+                regexp='^Hostname='
+                line='Hostname={{ new_hostname }}'
+  
+ 
+  - name: enable  zabbix-agent service
+    shell: name=sudo systemctl enable zabbix-agent
+  
+  - name: restart zabbix-agent  
+    shell: name=sudo systemctl restart zabbix-agent
+
+
+
+

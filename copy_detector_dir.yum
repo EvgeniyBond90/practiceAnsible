@@ -1,0 +1,37 @@
+---
+- name: unpacking dir detector
+  hosts: debug_stela_sniffers
+  become: yes
+
+
+
+  vars :
+    source_file  : /etc/ansible/detector
+    destin_file  : /home/xavier-stell/
+    detector   : /home/xavier-stell/detector/detector_1
+    detector2   : /home/xavier-stell/detector/detector_2
+    sender       : /home/xavier-stell/detector/sender
+
+
+
+
+  tasks :
+    
+    - name : copy dir detector packages to host
+      copy : src={{ source_file }} dest={{ destin_file }} 
+    
+    - name: permissions for detector_1
+      ansible.builtin.file: path={{ detector}} mode=0755 
+
+    - name: permissions for detector_2
+      ansible.builtin.file: path={{ detector2}} mode=0755
+  
+    - name: permissions for sender
+      ansible.builtin.file: path={{ sender}} mode=0755
+
+    
+
+
+
+
+

@@ -1,0 +1,22 @@
+---
+
+- name: update sniffers
+  hosts: transport_sniffers
+  become: yes
+
+  vars:
+    source_file: /etc/ansible/forSniffer/sniff
+    destin_file: /home/pi/sniff
+   
+
+  tasks:
+  - name: delete file sniff
+    shell: sudo rm /home/pi/sniff/sniff
+
+  - name: Copy files to /home/pi/sniff
+    copy: src={{ source_file }} dest={{ destin_file }} mode=0751
+
+  - name: Reboot host
+    shell: name= sudo reboot
+
+

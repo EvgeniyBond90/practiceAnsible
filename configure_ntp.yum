@@ -1,0 +1,23 @@
+---
+
+- name: update ntp sniffers
+  hosts: stela_sniffers
+  become: yes
+  
+  tasks:
+  - name: change tymesyncd.conf
+    lineinfile:
+            dest: /etc/systemd/timesyncd.conf
+            regexp: '^NTP='
+            line: 'NTP=10.176.0.102'
+    
+  - name : Reboot host and wait for it to restart
+    reboot:
+            msg: "Reboot initiated by Ansible"
+            connect_timeout: 5
+            reboot_timeout: 600
+            pre_reboot_delay: 0
+            post_reboot_delay: 30   
+
+ 
+    

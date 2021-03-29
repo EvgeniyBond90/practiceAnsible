@@ -1,0 +1,45 @@
+---
+- name: update detector
+  hosts: stela_sniffers
+  become: yes
+
+  vars:
+    source_file: /etc/ansible/detector/
+    destin_file: /home/xavier-stell/detector/
+
+
+  tasks:
+    - name: Delete detector_1
+      shell: sudo rm /home/xavier-stell/detector/detector_1
+      ignore_errors: yes
+    
+
+    - name: Delete detector_2
+      shell: sudo rm /home/xavier-stell/detector/detector_2
+      ignore_errors: yes
+ 
+ 
+    - name: Del detector_1.py
+      shell: sudo rm /home/xavier-stell/detector/detector_1.py
+      ignore_errors: yes
+    
+    - name: Del detector_2.py
+      shell: sudo rm /home/xavier-stell/detector/detector_2.py
+      ignore_errors: yes  
+    
+    - name: Del sender.py
+      shell: sudo rm /home/xavier-stell/detector/sender.py
+      ignore_errors: yes  
+
+    - name: Copy  detector files to host
+      copy: src={{ source_file }} dest={{ destin_file }} mode=744
+
+
+    - name: Mass service restart
+      service: name={{ item }} state=restarted
+      with_items:
+          - detector_1
+          - detector_2
+          - sender
+
+

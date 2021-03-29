@@ -1,0 +1,22 @@
+---
+- name: update sender
+  hosts: debug_stela_sniffers
+  become: yes
+
+  vars:
+    source_file: /etc/ansible/packages/sender
+    destin_file: /home/xavier-stell/detector/
+
+
+  tasks:
+    - name: sender
+      shell: sudo rm /home/xavier-stell/detector/sender
+      ignore_errors: yes
+
+
+    - name: Copy  sender files to host
+      copy: src={{ source_file }} dest={{ destin_file }} mode=0755
+
+
+    - name: Mass service restart
+      service: name=sender state=restarted

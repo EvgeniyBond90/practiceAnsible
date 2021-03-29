@@ -1,0 +1,18 @@
+---
+- name: check fstab
+  hosts: problem_sniffers
+  become: yes
+
+
+
+
+
+  tasks :
+
+    - name: check fstab
+      shell: sudo /etc/fstab
+      register: out
+
+
+
+    - debug: var=out.stdout_lines

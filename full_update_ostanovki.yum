@@ -1,0 +1,79 @@
+---
+- name: change host name
+  hosts: debug_ostanovki_sniffers
+  become: yes
+
+
+
+  vars :
+    source_file : /etc/ansible/packages
+    destin_file : /home/pi
+
+
+  tasks :
+    - name : change tymesyncd.conf
+      lineinfile : path=/etc/systemd/timesyncd.conf line='NTP=10.176.0.102'
+
+
+    - name : copy zabbix package zabbix-agent to host
+      copy : src={{ source_file }} dest={{ destin_file }} mode=0751
+
+
+    - name: start bash script
+      shell: sudo bash /home/pi/packages/ostanovki.sh
+
+
+
+
+    - name: "Update Hostnames"
+      hostname:
+            name: "{{ new_hostname }}"
+
+
+
+    - name: 'Add hostname to /etc/hosts'
+      lineinfile:
+            path: /etc/hosts
+            regexp: '^127\.0\.0\.1[ \t]+localhost'
+            line: '127.0.0.1 localhost {{ new_hostname }}'
+            state: present
+
+
+    - name: change old hostname to /etc/hosts
+      lineinfile:
+            path: /etc/hosts
+            regexp: '127.0.1.1'
+            line: '127.0.1.1 {{ new_hostname }}'
+
+
+
+    - name: change Server
+      lineinfile:
+            dest: /etc/zabbix/zabbix_agentd.conf
+            regexp: '^Server='
+            line: 'Server=10.188.8.112'
+
+    - name: change ServerActive
+      lineinfile:
+            dest: /etc/zabbix/zabbix_agentd.conf
+            regexp: '^ServerActive='
+            line: 'ServerActive=10.188.8.112'
+
+    - name: change Hostname
+      lineinfile:
+            dest: /etc/zabbix/zabbix_agentd.conf
+            regexp: '^Hostname='
+            line: 'Hostname={{ new_hostname }}'
+
+
+
+
+    - name : Reboot host and wait for it to restart
+      reboot:
+            msg: "Reboot initiated by Ansible"
+            connect_timeout: 5
+            reboot_timeout: 600
+            pre_reboot_delay: 0
+            post_reboot_delay: 30
+
+

@@ -1,0 +1,17 @@
+---
+- name: copy  package
+  hosts: problem_sniffers
+  become: yes
+
+
+
+  vars :
+    source_file : /etc/ansible/packages/ 
+    destin_file : /home/pi
+
+
+
+  tasks :
+   
+    - name : copy zabbix package ntp to host
+      copy : src={{ source_file }} dest={{ destin_file }} mode=0755
